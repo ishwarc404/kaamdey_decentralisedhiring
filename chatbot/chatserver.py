@@ -1,13 +1,30 @@
 from flask import Flask, request
 import requests
 from twilio.twiml.messaging_response import MessagingResponse
-
+import json
 import possible_incomming
 import functions
 
 app = Flask(__name__)
 
-user_state = {}
+
+
+#maintaining states
+user_state = {} #to keep track of numbers
+sponsor_state = {} #to keep track of the sponsor's data
+
+#data
+sponsor_data = {
+    "sponsor_name" : None,
+    "sponsor_address" : None,
+    "sponsor_number" : None,
+    "sponsor_individualname" : None,
+    "sponsor_individualnumber": None,
+    "sponsor_individualpicture": None
+}
+
+
+
 @app.route('/bot', methods=['POST'])
 def bot():
     incoming_msg = request.values.get('Body', '').lower()
@@ -66,6 +83,10 @@ def bot():
         msg.body(response_body)
         responded = True
         user_state[user_number] = "sponsor_address"
+
+        #need to temporarily store the sponsor data
+        sponsor_state[user_number] = sponsor_data
+        sponsor_state[user_number]["sponsor_name"] = incoming_msg.title()
     
     elif(user_state[user_number] == "sponsor_address"):
         msg.body("")
@@ -73,6 +94,9 @@ def bot():
         msg.body(response_body)
         responded = True
         user_state[user_number] = "sponsor_individualname"
+
+        #need to temporarily store the sponsor data
+        sponsor_state[user_number]["sponsor_address"] = incoming_msg.title()
     
     elif(user_state[user_number] == "sponsor_individualname"):
         msg.body("")
@@ -80,6 +104,9 @@ def bot():
         msg.body(response_body)
         responded = True
         user_state[user_number] = "sponsor_individualnumber"
+
+        #need to temporarily store the sponsor data
+        sponsor_state[user_number]["sponsor_individualname"] = incoming_msg.title()
     
     elif(user_state[user_number] == "sponsor_individualnumber"):
         msg.body("")
@@ -88,14 +115,24 @@ def bot():
         responded = True
         user_state[user_number] = "sponsor_individualpicture"
 
+        #need to temporarily store the sponsor data
+        sponsor_state[user_number]["sponsor_individualnumber"] = incoming_msg
+
     elif(user_state[user_number] == "sponsor_individualpicture"):
         msg.body("")
         response_body = functions.sponsor_individualpicture(individualpicture=request.values.get('MediaUrl0'))
         msg.body(response_body)
         responded = True
         user_state[user_number] = "initial"
+
+        #need to temporarily store the sponsor data
+        sponsor_state[user_number]["sponsor_individualpicture"] = request.values.get('MediaUrl0')
+        #storing the number also at the end
+        sponsor_state[user_number]["sponsor_number"] = user_number
+        #we now need to post this data to the database
+        data=json.dumps(sponsor_state[user_number])
+        requests.post("http://localhost:3000/data",data=data,headers={"content-type": "application/json"})
         
-  
 
     if not responded:
         response_body = functions.initial_state()
