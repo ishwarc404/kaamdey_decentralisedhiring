@@ -68,7 +68,11 @@ def sponsor_individualaddress(individualaddress):
 
 def sponsor_individualnumber(individualnumber):
     individualnumber = individualnumber.title()
-    response_body = "The individual's number is:\n{}, \nPlease take a picture of theirs and send it.".format(individualnumber)
+    response_body = "The individual's number is:\n{}, \nPlease enter a short review of the professional.".format(individualnumber)
+    return response_body
+
+def sponsor_individualreview(individualreview):
+    response_body = "Thank you for the review,\nPlease take a picture of theirs and send it."
     return response_body
 
 def sponsor_individualpicture(individualpicture):

@@ -4,7 +4,7 @@
       <h1>Your search results</h1>
     </div>
     <div>
-      <v-card class="mx-auto" max-width="344" :key="individual" v-for="individual in cardData">
+      <v-card class="mx-auto" max-width="344" style="padding-top:2% padding-bottom:2%" :key="individual" v-for="individual in cardData">
         <v-card-text>
           <div>Professional</div>
           <p class="display-1 text--primary">{{individual.sponsor_individualname}}</p>
@@ -12,13 +12,14 @@
           <div class="d-flex">
             <div>
               <div class="text--primary">
-                <b>Review:</b> Well mannered and
-                <br />a hardworker
+                <b>Review:</b> {{individual.sponsor_individualreview}}
               </div>
               <div class="text--primary">
-                <b>Sponsor Name:</b> {{individual.sponsor_name}}
+                <b>Sponsor Name:</b>
+                {{individual.sponsor_name}}
                 <br />
-                <b>Sponsor Contact:</b> {{individual.sponsor_number}}
+                <b>Sponsor Contact:</b>
+                {{individual.sponsor_number}}
               </div>
             </div>
             <div class="ml-auto">
@@ -27,9 +28,15 @@
           </div>
         </v-card-text>
         <v-card-actions>
-          <a v-bind:href="'tel:'+ ''+ individual.sponsor_individualnumber+''" style="decoration: none;"><v-btn text color="deep-purple accent-4"> Call professional</v-btn></a>
+          <a
+            v-bind:href="'tel:'+ ''+ individual.sponsor_individualnumber+''"
+            style="decoration: none;"
+          >
+            <v-btn text color="deep-purple accent-4">Call professional</v-btn>
+          </a>
         </v-card-actions>
       </v-card>
+      
     </div>
   </v-app>
 </template>
@@ -60,13 +67,13 @@ export default {
       console.log("UUID is:", uuid);
       //now we need to get the data related to this from the database
       let datalaoded = await axios.get(
-        `http://192.168.0.2:3000/previewdata?uuid=${uuid}`
+        `http://9423d9507943.ngrok.io/previewdata?uuid=${uuid}`
       );
       datalaoded = datalaoded.data[0];
       let uuidlist = datalaoded["uuidlist"];
       for (var i = 0; i < uuidlist.length; i++) {
         let individualdata = await axios.get(
-          `http://192.168.0.2:3000/data?uuid=${uuidlist[i]}`
+          `http://9423d9507943.ngrok.io/data?uuid=${uuidlist[i]}`
         );
         this.cardData.push(individualdata.data[0]);
       }
