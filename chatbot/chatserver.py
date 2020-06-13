@@ -2,11 +2,14 @@ from flask import Flask, request
 import requests
 from twilio.twiml.messaging_response import MessagingResponse
 import json
-import possible_incomming
-import functions
+import shortuuid
+
+#self defined
+import possible_incomming 
+import functions 
+
 
 app = Flask(__name__)
-
 
 
 #maintaining states
@@ -19,8 +22,11 @@ sponsor_data = {
     "sponsor_address" : None,
     "sponsor_number" : None,
     "sponsor_individualname" : None,
+    "sponsor_individualprofession":None,
+    "sponsor_individualaddress": None,
     "sponsor_individualnumber": None,
-    "sponsor_individualpicture": None
+    "sponsor_individualpicture": None,
+    "uuid":None
 }
 
 
@@ -103,17 +109,39 @@ def bot():
         response_body = functions.sponsor_individualname(individualname=incoming_msg)
         msg.body(response_body)
         responded = True
-        user_state[user_number] = "sponsor_individualnumber"
+        user_state[user_number] = "sponsor_individualprofession"
 
         #need to temporarily store the sponsor data
         sponsor_state[user_number]["sponsor_individualname"] = incoming_msg.title()
+
     
+    elif(user_state[user_number] == "sponsor_individualprofession"):
+        msg.body("")
+        response_body = functions.sponsor_individualprofession(individualprofession=incoming_msg)
+        msg.body(response_body)
+        responded = True
+        user_state[user_number] = "sponsor_individualaddress" #next state
+
+        #need to temporarily store the sponsor data
+        sponsor_state[user_number]["sponsor_individualprofession"] = incoming_msg
+    
+    elif(user_state[user_number] == "sponsor_individualaddress"):
+        msg.body("")
+        response_body = functions.sponsor_individualaddress(individualaddress=incoming_msg)
+        msg.body(response_body)
+        responded = True
+        user_state[user_number] = "sponsor_individualnumber" #next state
+
+        #need to temporarily store the sponsor data
+        sponsor_state[user_number]["sponsor_individualaddress"] = incoming_msg
+
+
     elif(user_state[user_number] == "sponsor_individualnumber"):
         msg.body("")
         response_body = functions.sponsor_individualnumber(individualnumber=incoming_msg)
         msg.body(response_body)
         responded = True
-        user_state[user_number] = "sponsor_individualpicture"
+        user_state[user_number] = "sponsor_individualpicture" #next state
 
         #need to temporarily store the sponsor data
         sponsor_state[user_number]["sponsor_individualnumber"] = incoming_msg
@@ -121,17 +149,26 @@ def bot():
     elif(user_state[user_number] == "sponsor_individualpicture"):
         msg.body("")
         response_body = functions.sponsor_individualpicture(individualpicture=request.values.get('MediaUrl0'))
-        msg.body(response_body)
+        
         responded = True
         user_state[user_number] = "initial"
 
         #need to temporarily store the sponsor data
         sponsor_state[user_number]["sponsor_individualpicture"] = request.values.get('MediaUrl0')
+
         #storing the number also at the end
         sponsor_state[user_number]["sponsor_number"] = user_number
-        #we now need to post this data to the database
+
+        #we now need to post this data to the database with a unique uuid
+        sponsor_state[user_number]["uuid"] = shortuuid.ShortUUID().random(length=5)
+
+        #adding this to the response
+        response_body += "\n Your unique registration ID is: {}".format(sponsor_state[user_number]["uuid"])
         data=json.dumps(sponsor_state[user_number])
         requests.post("http://localhost:3000/data",data=data,headers={"content-type": "application/json"})
+
+        #finalising the response body
+        msg.body(response_body)
         
 
     if not responded:
