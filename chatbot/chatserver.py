@@ -7,7 +7,7 @@ import shortuuid
 #self defined
 import possible_incomming 
 import functions 
-
+import dbSearch
 
 app = Flask(__name__)
 
@@ -15,7 +15,7 @@ app = Flask(__name__)
 #maintaining states
 user_state = {} #to keep track of numbers
 sponsor_state = {} #to keep track of the sponsor's data
-
+search_state = {}
 #data
 sponsor_data = {
     "sponsor_name" : None,
@@ -29,7 +29,12 @@ sponsor_data = {
     "uuid":None
 }
 
+search_data = {
+    "service_type":None,
+    "service_address":None
+}
 
+#need to use switch case instead of ifelse ideally
 
 @app.route('/bot', methods=['POST'])
 def bot():
@@ -66,21 +71,59 @@ def bot():
     
     elif(user_state[user_number] == "initial" and incoming_msg=="1"):
         msg.body("")
-        response_body = functions.switchtosearch_state()
+        response_body = functions.switchtosearch_state() #initial search message
         msg.body(response_body)
         responded = True
         user_state[user_number] = "search"
     
     elif(user_state[user_number] == "initial" and incoming_msg=="2"):
         msg.body("")
-        response_body = functions.switchtosponsor_state()
+        response_body = functions.switchtosponsor_state() #initial sponsor message
         msg.body(response_body)
         responded = True
         user_state[user_number] ="sponsor"
 
 
-    #state2 - searching
+########################################################################################################
 
+    #state2 - searching
+    elif(user_state[user_number] == "search"):
+        msg.body("")
+        response_body = functions.search_servicetype(servicetype=incoming_msg)
+        msg.body(response_body)
+        responded = True
+        user_state[user_number] = "serviceaddress" #next user state
+
+        #need to temporarily store the search data
+        search_state[user_number] = search_data #initialising
+        search_state[user_number]["service_type"] = incoming_msg
+
+    elif(user_state[user_number] == "serviceaddress"):
+        msg.body("")
+        response_body = functions.search_serviceaddress(serviceaddress=incoming_msg)
+        
+        responded = True
+
+        #need to temporarily store the search data
+        search_state[user_number]["service_address"] = incoming_msg
+
+        #need to ping the database and search for the services now
+        data_received = dbSearch.individualSearch(search_state[user_number]["service_type"],search_state[user_number]["service_address"])
+        user_state[user_number] = "initial" #next user state
+        
+        for individual in data_received:
+            response_body += "\n" + "Name: " + individual['sponsor_individualname'] + "\nContact Number:" + individual['sponsor_individualnumber']
+            response_body += "\n \n"
+
+
+
+        msg.body(response_body)
+
+
+
+
+
+########################################################################################################
 
     #state3  - sponsor
     elif(user_state[user_number] == "sponsor"):

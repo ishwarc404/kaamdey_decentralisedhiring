@@ -5,6 +5,8 @@ import json
 import functions 
 
 
-
-def individualSearch(address,profession):
+def individualSearch(profession,address):
     response = requests.get(f'http://localhost:3000/data?sponsor_individualaddress={address}&sponsor_individualprofession={profession}')
+    results  = json.loads(response.content)
+    return results
+

@@ -10,11 +10,29 @@ def initial_state():
     response_body = "Hello! Welcome to the Kaamdev Whatsapp service! We help you find and connect to your nearest professionals. \nHow can we help you? \n1. Search for help \n2. Become a Sponsor \nReply either with 1 or 2"
     return response_body
 
+############################################################################################################
+#search
+
 def switchtosearch_state():
     response_body = "What kind of service are you looking for? \n1. House Help \n2. Car Wash \n3. Electricitan \nReply either with appropriate number."
     return response_body
 
+def search_servicetype(servicetype):
+    try:
+        servicetype = professions_dict[servicetype]
+    except:
+        return "Please select the right profession option."
+    response_body = "The individual's profession is:\n{}, \nPlease enter your desired address of service".format(servicetype)
+    return response_body
 
+
+def search_serviceaddress(serviceaddress):
+    response_body = "Here are some individuals you can contact:\n"
+    return response_body
+
+
+
+############################################################################################################
 #sponsor
 
 def switchtosponsor_state():
