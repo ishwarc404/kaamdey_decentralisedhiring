@@ -27,7 +27,7 @@ def search_servicetype(servicetype):
 
 
 def search_serviceaddress(serviceaddress):
-    response_body = "Here are some individuals you can contact:\n"
+    response_body = "Here are a few individuals you may contact:\n"
     return response_body
 
 
