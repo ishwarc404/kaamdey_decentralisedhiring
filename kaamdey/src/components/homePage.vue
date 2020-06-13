@@ -16,7 +16,12 @@
       <v-btn small color="primary" large width="200" to="search">Search</v-btn>
     </div>
     <div class="d-flex justify-content-center" id="sposorButton">
-      <v-btn small color="primary" large>Become a sponsor!</v-btn>
+      <v-btn small color="primary" large to="sponsor">Become a sponsor!</v-btn>
+    </div>
+        <div class="d-flex justify-content-center" id="whatsaAppButton">
+      <v-btn small color="green" large @click="whatsapp">
+        <v-icon large color="white">mdi-whatsapp</v-icon>
+        WhatsApp Service</v-btn>
     </div>
   </v-app>
 </template>
@@ -35,11 +40,15 @@ export default {
   },
   methods: {
     ...mapActions(["updatesearchContent"]),
+    whatsapp: function () {   
+          window.open("https://wa.me/14155238886", "_blank");    
+      }
   },
   watch: {
     searchContent: function() {
       this.updatesearchContent(this.searchContent);
     },
+
   },
 };
 </script>

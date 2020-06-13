@@ -3,10 +3,10 @@
     <div class="d-flex justify-content-center" style="padding-top:2% padding-bottom:4%">
       <h1>Your search results</h1>
     </div>
-    <div>
+    <div class="d-flex justify-content-center" style="flex-wrap: wrap;">
       <v-card
         class="mx-auto"
-        max-width="344"
+        width="344"
         style="padding-top:2% padding-bottom:2%"
         :key="individual"
         v-for="individual in cardData"

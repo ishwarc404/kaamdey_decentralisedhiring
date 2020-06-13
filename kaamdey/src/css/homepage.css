@@ -11,6 +11,10 @@
   padding-bottom: 2%;
 }
 
+#whatsaAppButton{
+  padding-top: 2%;
+}
+
 @media only screen and (max-width: 600px) {
   #homePageLogo {
     padding-top: 20%;
@@ -24,4 +28,8 @@
   #searchButton {
     padding-bottom: 8%;
   }
+  #whatsaAppButton{
+    padding-top: 8%;
+  }
+  
 }
