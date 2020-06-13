@@ -14,7 +14,7 @@ def initial_state():
 #search
 
 def switchtosearch_state():
-    response_body = "What kind of service are you looking for? \n1. House Help \n2. Car Wash \n3. Electricitan \nReply either with appropriate number."
+    response_body = "What kind of service are you looking for? \n1. House Help \n2. Car Wash \n3. Electrician \nReply either with appropriate number."
     return response_body
 
 def search_servicetype(servicetype):
