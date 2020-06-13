@@ -66,7 +66,7 @@ def bot():
 
 
     #state 1 - initial
-    if(user_state[user_number] == "initial" and incoming_msg not in ["1","2"]):
+    if(user_state[user_number] == "initial" and incoming_msg not in ["1","2","3"]):
         response_body = functions.initial_state()
         msg.body(response_body)
         responded = True
@@ -84,6 +84,30 @@ def bot():
         msg.body(response_body)
         responded = True
         user_state[user_number] ="sponsor"
+
+    elif(user_state[user_number] == "initial" and incoming_msg=="3"):
+        msg.body("")
+        response_body = functions.profession_inclusion() #initial sponsor message
+        msg.body(response_body)
+        responded = True
+        user_state[user_number] ="profession_acception"
+
+########################################################################################################
+#state3 - profession inclusion
+    elif(user_state[user_number] == "profession_acception"):
+        msg.body("")
+        response_body,success_code = functions.profession_acception(incoming_msg) 
+        msg.body(response_body)
+        responded = True
+        user_state[user_number] ="initial"
+        if(success_code):
+            professionData = {
+            "user" : user_number,
+            "profession_requested": incoming_msg
+            }
+            #need to post this
+            data=json.dumps(professionData)
+            requests.post("http://localhost:3000/professionrequests",data=data,headers={"content-type": "application/json"})
 
 
 ########################################################################################################
@@ -131,7 +155,7 @@ def bot():
             requests.post("http://localhost:3000/previewdata",data=data,headers={"content-type": "application/json"})
 
             #preview link
-            link = "\nView more information such as images and more at the attached link http://25a16f66a97c.ngrok.io/preview={} \n".format(previewuuid)
+            link = "\nView more information such as images and more at the attached link http://86feca20bbc7.ngrok.io/preview={} \n".format(previewuuid)
             # msg.url=('http://localhost:8080/?preview={}'.format(previewuuid))
             # msg.url('https://cataas.com/cat')
             response_body += link

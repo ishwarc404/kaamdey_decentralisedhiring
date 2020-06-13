@@ -4,7 +4,13 @@
       <h1>Your search results</h1>
     </div>
     <div>
-      <v-card class="mx-auto" max-width="344" style="padding-top:2% padding-bottom:2%" :key="individual" v-for="individual in cardData">
+      <v-card
+        class="mx-auto"
+        max-width="344"
+        style="padding-top:2% padding-bottom:2%"
+        :key="individual"
+        v-for="individual in cardData"
+      >
         <v-card-text>
           <div>Professional</div>
           <p class="display-1 text--primary">{{individual.sponsor_individualname}}</p>
@@ -12,7 +18,8 @@
           <div class="d-flex">
             <div>
               <div class="text--primary">
-                <b>Review:</b> {{individual.sponsor_individualreview}}
+                <b>Review:</b>
+                {{individual.sponsor_individualreview}}
               </div>
               <div class="text--primary">
                 <b>Sponsor Name:</b>
@@ -36,7 +43,6 @@
           </a>
         </v-card-actions>
       </v-card>
-      
     </div>
   </v-app>
 </template>
@@ -67,13 +73,13 @@ export default {
       console.log("UUID is:", uuid);
       //now we need to get the data related to this from the database
       let datalaoded = await axios.get(
-        `http://9423d9507943.ngrok.io/previewdata?uuid=${uuid}`
+        `http://b3d4105f7736.ngrok.io/previewdata?uuid=${uuid}`
       );
       datalaoded = datalaoded.data[0];
       let uuidlist = datalaoded["uuidlist"];
       for (var i = 0; i < uuidlist.length; i++) {
         let individualdata = await axios.get(
-          `http://9423d9507943.ngrok.io/data?uuid=${uuidlist[i]}`
+          `http://b3d4105f7736.ngrok.io/data?uuid=${uuidlist[i]}`
         );
         this.cardData.push(individualdata.data[0]);
       }

@@ -7,7 +7,7 @@ professions_dict = {
 }
 
 def initial_state():
-    response_body = "Hello! Welcome to the Kaamdev Whatsapp service! We help you find and connect to your nearest professionals. \nHow can we help you? \n1. Search for help \n2. Become a Sponsor \nReply either with 1 or 2"
+    response_body = "Hello! Welcome to the Kaamdev Whatsapp service! We help you find and connect to your nearest professionals. \n\nHow can we help you? \n1. Search for help \n2. Become a Sponsor \n3. Request for profession inclusion \n\nReply either with 1,2,3 or reset to restart your session\nYou may also use our web portal for additional information:\n http://25a16f66a97c.ngrok.io"
     return response_body
 
 ############################################################################################################
@@ -80,5 +80,25 @@ def sponsor_individualreview(individualreview):
     return response_body
 
 def sponsor_individualpicture(individualpicture):
-    response_body = "Thank you for registering the individual."
+    response_body = "Thank you for registering the individual." + "\n\nHow can we help you further? \n1. Search for help \n2. Become a Sponsor \n3. Request for profession inclusion \n\nReply either with 1,2,3 or reset to restart your session"
     return response_body
+
+
+############################################################################################################
+#profession inclusion
+def profession_inclusion():
+    response_body = "Please enter the profession you would like to include."
+    return response_body
+
+
+# #profession inclusion pt 2
+def profession_acception(profession):
+    print("HERE!")
+    listOfProfessions = ["house help","car wash","electrician"]
+    if(profession not in listOfProfessions):
+        response_body = "Thank you for requesting a new profession inclusion."
+        return response_body,True
+    else:
+        response_body = "The profession already exists, please try again." + "\n\nHow can we help you further? \n1. Search for help \n2. Become a Sponsor \n3. Request for profession inclusion \n\nReply either with 1,2,3 or reset to restart your session"
+        return response_body,False
+
