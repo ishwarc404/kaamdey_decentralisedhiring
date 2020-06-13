@@ -25,7 +25,8 @@ sponsor_data = {
     "sponsor_individualprofession":None,
     "sponsor_individualaddress": None,
     "sponsor_individualnumber": None,
-    "individualreview":None,
+    "sponsor_individualwages":None,
+    "sponsor_individualreview":None,
     "sponsor_individualpicture": None,
     "uuid":None
 }
@@ -114,7 +115,7 @@ def bot():
         individual_uuids = []
         if(len(data_received)!=0):
             for individual in data_received:
-                response_body += "\n" + "Name: " + individual['sponsor_individualname'] + "\nContact Number:" + individual['sponsor_individualnumber'] + "\nSponsor Review:" + individual['sponsor_individualreview']
+                response_body += "\n" + "Name: " + individual['sponsor_individualname'] + "\nContact Number:" + individual['sponsor_individualnumber'] + "\nWage Requirements:" + individual['sponsor_individualwages'] + "\nSponsor Review:" + individual['sponsor_individualreview']
                 response_body += "\n \n"
                 individual_uuids.append(individual['uuid'])
             
@@ -202,10 +203,22 @@ def bot():
         response_body = functions.sponsor_individualnumber(individualnumber=incoming_msg)
         msg.body(response_body)
         responded = True
-        user_state[user_number] = "sponsor_individualreview" #next state
+        user_state[user_number] = "sponsor_individualwages" #next state
 
         #need to temporarily store the sponsor data
         sponsor_state[user_number]["sponsor_individualnumber"] = incoming_msg
+
+
+    elif(user_state[user_number] == "sponsor_individualwages"):
+        msg.body("")
+        response_body = functions.sponsor_individualwages(individualwages=incoming_msg)
+        msg.body(response_body)
+        responded = True
+        user_state[user_number] = "sponsor_individualreview" #next state
+
+        #need to temporarily store the sponsor data
+        sponsor_state[user_number]["sponsor_individualwages"] = incoming_msg
+
 
     elif(user_state[user_number] == "sponsor_individualreview"):
         msg.body("")

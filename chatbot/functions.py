@@ -51,7 +51,7 @@ def sponsor_address(address):
 
 def sponsor_individualname(individualname):
     individualname = individualname.title()
-    response_body = "You want to sponsor:\n{}, \nPlease select their profession: \n1. House Help \n2. Car Wash \n3. Electricitan \nReply either with appropriate number.".format(individualname)
+    response_body = "You want to sponsor:\n{}, \nPlease select their profession: \n1. House Help \n2. Car Wash \n3. Electrician \nReply either with appropriate number.".format(individualname)
     return response_body
 
 def sponsor_individualprofession(individualprofession):
@@ -68,7 +68,11 @@ def sponsor_individualaddress(individualaddress):
 
 def sponsor_individualnumber(individualnumber):
     individualnumber = individualnumber.title()
-    response_body = "The individual's number is:\n{}, \nPlease enter a short review of the professional.".format(individualnumber)
+    response_body = "The individual's number is:\n{}, \nPlease enter any hourly or monthly wage requirements".format(individualnumber)
+    return response_body
+
+def sponsor_individualwages(individualwages):
+    response_body = "Thank you for the wage details,\nPlease enter a short review of the professional."
     return response_body
 
 def sponsor_individualreview(individualreview):
