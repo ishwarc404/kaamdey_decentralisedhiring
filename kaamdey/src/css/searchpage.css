@@ -1,0 +1,35 @@
+#searchPageLogo {
+  padding-top: 3%;
+  width: 30%;
+}
+
+#resultsHeader {
+  padding-top: 1%;
+  color: #333333;
+  font-size: 20px;
+  
+}
+
+#returnHomeButton {
+  padding-top: 2%;
+}
+@media only screen and (max-width: 600px) {
+  #searchPageLogo {
+    padding-top: 10%;
+    width: 70%;
+    height: 100%;
+  }
+
+
+#resultsHeader {
+  padding-top: 3%;
+  color: #333333;
+  font-size: 21px;
+  
+}
+
+#returnHomeButton {
+  padding-top: 5%;
+}
+
+}

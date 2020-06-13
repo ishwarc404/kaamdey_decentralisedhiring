@@ -1,0 +1,27 @@
+#homePageLogo {
+  padding-top: 7%;
+  width: 50%;
+}
+
+#searchBar {
+  padding-top: 5%;
+}
+
+#searchButton {
+  padding-bottom: 2%;
+}
+
+@media only screen and (max-width: 600px) {
+  #homePageLogo {
+    padding-top: 20%;
+    width: 100%;
+    height: 100%;
+  }
+
+  #searchBar {
+    padding-top: 10%;
+  }
+  #searchButton {
+    padding-bottom: 8%;
+  }
+}

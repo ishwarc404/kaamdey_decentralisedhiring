@@ -110,17 +110,34 @@ def bot():
         #need to ping the database and search for the services now
         data_received = dbSearch.individualSearch(search_state[user_number]["service_type"],search_state[user_number]["service_address"])
         user_state[user_number] = "initial" #next user state
-        
-        for individual in data_received:
-            response_body += "\n" + "Name: " + individual['sponsor_individualname'] + "\nContact Number:" + individual['sponsor_individualnumber']
-            response_body += "\n \n"
+        individual_uuids = []
+        if(len(data_received)!=0):
+            for individual in data_received:
+                response_body += "\n" + "Name: " + individual['sponsor_individualname'] + "\nContact Number:" + individual['sponsor_individualnumber']
+                response_body += "\n \n"
+                individual_uuids.append(individual['uuid'])
+            
 
+            previewuuid = shortuuid.ShortUUID().random(length=5)
+            #now we need to post the individual uuid list to the backend database also and generate a uuid for that
+            previewdata = {
+                "uuid" : previewuuid,
+                "uuidlist" : individual_uuids
+            }
+            #need to post this
+            data=json.dumps(previewdata)
+            requests.post("http://localhost:3000/previewdata",data=data,headers={"content-type": "application/json"})
 
+            #preview link
+            link = "\nView more information at the attached link http://25a16f66a97c.ngrok.io/?preview={} \n".format(previewuuid)
+            # msg.url=('http://localhost:8080/?preview={}'.format(previewuuid))
+            # msg.url('https://cataas.com/cat')
+            response_body += link
+            msg.body(response_body)
 
-        msg.body(response_body)
-
-
-
+        else:
+            msg.body("")
+            msg.body("No professionals found :( ")
 
 
 ########################################################################################################
