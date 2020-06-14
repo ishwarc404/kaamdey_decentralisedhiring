@@ -122,7 +122,7 @@ export default {
   },
   methods: {
     async submitData() {
-      await axios.post("http://b3d4105f7736.ngrok.io/data", this.sponsor_data);
+      await axios.post("http://c8143a2e1248.ngrok.io/data", this.sponsor_data);
       alert("done");
     }
   },

@@ -200,7 +200,7 @@ def bot():
             requests.post("http://localhost:3000/previewdata",data=data,headers={"content-type": "application/json"})
 
             #preview link
-            link = "\nView more information such as images and more at the attached link http://86feca20bbc7.ngrok.io/preview={} \n".format(previewuuid)
+            link = "\nView more information such as images and more at the attached link http://3a9746c4ea7a.ngrok.io/preview={} \n".format(previewuuid)
             # msg.url=('http://localhost:8080/?preview={}'.format(previewuuid))
             # msg.url('https://cataas.com/cat')
 

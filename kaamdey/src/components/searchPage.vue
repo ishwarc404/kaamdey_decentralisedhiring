@@ -13,7 +13,6 @@
       <h4>No results</h4>
     </div>
     <div class="d-flex justify-content-center" style="flex-wrap: wrap;" v-if="cardData.length!=0">
-      
       <v-card
         width="344"
         style="padding-top:2% padding-bottom:2%"
@@ -73,10 +72,10 @@ export default {
         "2": "Car Wash",
         "3": "Electrician"
       },
-      reverser_dict:{
-        "house help": "1", 
-        "car wash":"2",
-        "electrician":"3"
+      reverser_dict: {
+        "house help": "1",
+        "car wash": "2",
+        electrician: "3"
       }
     };
   },
@@ -85,19 +84,22 @@ export default {
       let keyword = this.getsearchContent;
       if (keyword[0] == "5") {
         let data = await axios.get(
-          `http://b3d4105f7736.ngrok.io/data?sponsor_individualaddress=${keyword.slice(0,6)}`
+          `http://c8143a2e1248.ngrok.io/data?sponsor_individualaddress=${keyword.slice(
+            0,
+            6
+          )}`
         );
         data = data.data;
         this.cardData = data;
       } else {
         let data = await axios.get(
-          `http://b3d4105f7736.ngrok.io/data?sponsor_individualprofession=${this.reverser_dict[keyword.toLowerCase()]}`
+          `http://c8143a2e1248.ngrok.io/data?sponsor_individualprofession=${
+            this.reverser_dict[keyword.toLowerCase()]
+          }`
         );
         data = data.data;
         this.cardData = data;
       }
-
-      
     }
   },
 

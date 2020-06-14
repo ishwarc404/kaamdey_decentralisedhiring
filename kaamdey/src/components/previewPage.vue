@@ -73,13 +73,13 @@ export default {
       console.log("UUID is:", uuid);
       //now we need to get the data related to this from the database
       let datalaoded = await axios.get(
-        `http://b3d4105f7736.ngrok.io/previewdata?uuid=${uuid}`
+        `http://c8143a2e1248.ngrok.io/previewdata?uuid=${uuid}`
       );
       datalaoded = datalaoded.data[0];
       let uuidlist = datalaoded["uuidlist"];
       for (var i = 0; i < uuidlist.length; i++) {
         let individualdata = await axios.get(
-          `http://b3d4105f7736.ngrok.io/data?uuid=${uuidlist[i]}`
+          `http://c8143a2e1248.ngrok.io/data?uuid=${uuidlist[i]}`
         );
         this.cardData.push(individualdata.data[0]);
       }
