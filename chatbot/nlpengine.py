@@ -1,48 +1,50 @@
 
 #import library
-import speech_recognition as sr
+
 import requests
 import shortuuid
-import soundfile as sf
 
+import apikey
+import cloudconvert
 
+cloudconvert.configure(api_key=apikey.apikey, sandbox=False)
 
-# Initialize recognizer class (for recognizing the speech)
-r = sr.Recognizer()
-
-
+URL = "https://api.cloudconvert.com/v1/convert"
 def voicetotext(url):
 
-    # Reading Audio file
-    r = requests.get(url, allow_redirects=True)
+    Data = {
+        "apikey": "XdEKGGbwGoU6XR4mdwj5xf1zOt7IVrJVL3lviFuuH6vMEudHG5639PBJ0eJnWTzi",
+        "inputformat": "ogg",
+        "outputformat": "wav",
+        "input": "upload",
+        "file": "audio/test.ogg",
+        "wait": True,
+        "download": "inline"
+    }
+    r = requests.post(URL,data=Data)
     audiofile = shortuuid.ShortUUID().random(length=5)
-    open('audio/{}.ogg'.format(audiofile), 'wb').write(r.content)
+    open('audio/{}.wav'.format(audiofile), 'wb').write(r.content)
 
-    # # listening the audio file and store in audio_text variable
-    data, samplerate = sf.read('audio/{}.ogg'.format(audiofile))
-    sf.write('audio/{}.wav'.format(audiofile), data, samplerate)
+
+    # # # listening the audio file and store in audio_text variable
+    # data, samplerate = sf.read('audio/{}.ogg'.format(audiofile))
+    # sf.write('audio/{}.wav'.format(audiofile), data, samplerate)
 
     # with sr.AudioFile('audio/{}.wav'.format(audiofile)) as source:
     #     audio_text = r.listen(source)
-        
+
     # # recoginize_() method will throw a request error if the API is unreachable, hence using exception handling
     #     try:
-    
+
     #         # using google speech recognition
     #         text = r.recognize_google(audio_text)
-    #         text_recognised =  text 
-        
+    #         text_recognised =  text
+
     #     except:
     #         text_recognised = False
 
 
-
-
-
 voicetotext("https://s3-external-1.amazonaws.com/media.twiliocdn.com/ACd57aa19bfb993457ee43f94e2be4c7f9/c9431049718c9b8d76ebc1c955ba72b6")
-
-
-
 
 
 
