@@ -80,7 +80,7 @@ def bot():
     if(media_content == "audio/ogg"):
         #need to run NLP Engine
         print(request.values.get('MediaUrl0'))
-        msg.body("Voice Enabled")
+        msg.body("Voice Enabled, But unfortunately it is still in beta form.")
         responded = True
         user_state[user_number] = "initial"
         return str(resp)
@@ -210,8 +210,9 @@ def bot():
             msg.body(response_body)
 
         else:
-            msg.body("")
-            msg.body("No professionals found :( ")
+            response_body = "No professionals found :( "
+            response_body = translator.translate(response_body, dest=user_language[user_number]).text
+            msg.body(response_body)
 
 
 ########################################################################################################

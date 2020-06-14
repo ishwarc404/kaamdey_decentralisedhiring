@@ -7,7 +7,7 @@ professions_dict = {
 }
 
 def initial_state():
-    response_body = "Hello! Welcome to the Kaamdev Whatsapp service! We help you find and connect to your nearest professionals. \n\nHow can we help you? \n1. Search for help \n2. Become a Sponsor \n3. Request for profession inclusion \n\nReply either with 1,2,3 or reset to restart your session \n\nLanguages:\n*हिंदी के लिए 4 दबाएं* \n*ಕನ್ನಡಕ್ಕಾಗಿ 5 ಒತ್ತಿರಿ*\nYou may also use our web portal for additional information:\n http://86feca20bbc7.ngrok.io"
+    response_body = "Hello! Welcome to the Kaamdey Whatsapp service! We help you find and connect to your nearest professionals. \n\nHow can we help you? \n1. Search for help \n2. Become a Sponsor \n3. Request for profession inclusion \n\nReply either with 1,2,3 or reset to restart your session \n\nLanguages:\n*हिंदी के लिए 4 दबाएं* \n*ಕನ್ನಡಕ್ಕಾಗಿ 5 ಒತ್ತಿರಿ*\nYou may also use our web portal for additional information:\n http://86feca20bbc7.ngrok.io"
     return response_body
 
 ############################################################################################################
