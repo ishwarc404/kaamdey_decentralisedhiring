@@ -2,18 +2,24 @@ from flask import Flask, request
 import requests
 from twilio.twiml.messaging_response import MessagingResponse
 import json
-import shortuuid
 
 #self defined
 import possible_incomming 
 import functions 
 import dbSearch
+# import nlpengine
+import shortuuid
+#translator
+from googletrans import Translator
+translator = Translator()
+
 
 app = Flask(__name__)
 
 
 #maintaining states
 user_state = {} #to keep track of numbers
+user_language = {}
 sponsor_state = {} #to keep track of the sponsor's data
 search_state = {}
 #data
@@ -42,7 +48,7 @@ search_data = {
 def bot():
     incoming_msg = request.values.get('Body', '').lower()
 
-    print(request.values)
+    # print(request.values)
     user_number = request.values.get('From')[9:] #will be used to store the user state
 
 
@@ -55,25 +61,42 @@ def bot():
     if user_number not in user_state:
         #registering the new user into the state management
         user_state[user_number] = "initial" 
+        user_language[user_number] ="en"
+        
 
     #reset
     if(incoming_msg == "reset"):
         user_state[user_number] = "initial"
+        user_language[user_number] = "en"
         response_body = functions.initial_state()
+        response_body = translator.translate(response_body, dest=user_language[user_number]).text
         msg.body(response_body)
+        return str(resp)
+        
+
+
+    #NLP ENGINE
+    media_content =  request.values.get("MediaContentType0")
+    if(media_content == "audio/ogg"):
+        #need to run NLP Engine
+        print(request.values.get('MediaUrl0'))
+        msg.body("Voice Enabled")
+        responded = True
+        user_state[user_number] = "initial"
         return str(resp)
 
 
-
     #state 1 - initial
-    if(user_state[user_number] == "initial" and incoming_msg not in ["1","2","3"]):
+    if(user_state[user_number] == "initial" and incoming_msg not in ["1","2","3","4","5"]):
         response_body = functions.initial_state()
+        response_body = translator.translate(response_body, dest=user_language[user_number]).text
         msg.body(response_body)
         responded = True
     
     elif(user_state[user_number] == "initial" and incoming_msg=="1"):
         msg.body("")
         response_body = functions.switchtosearch_state() #initial search message
+        response_body = translator.translate(response_body, dest=user_language[user_number]).text
         msg.body(response_body)
         responded = True
         user_state[user_number] = "search"
@@ -81,6 +104,7 @@ def bot():
     elif(user_state[user_number] == "initial" and incoming_msg=="2"):
         msg.body("")
         response_body = functions.switchtosponsor_state() #initial sponsor message
+        response_body = translator.translate(response_body, dest=user_language[user_number]).text
         msg.body(response_body)
         responded = True
         user_state[user_number] ="sponsor"
@@ -88,15 +112,35 @@ def bot():
     elif(user_state[user_number] == "initial" and incoming_msg=="3"):
         msg.body("")
         response_body = functions.profession_inclusion() #initial sponsor message
+        response_body = translator.translate(response_body, dest=user_language[user_number]).text
         msg.body(response_body)
         responded = True
         user_state[user_number] ="profession_acception"
+
+    #LANGUAGE STATE MANAGEMENT
+    elif(user_state[user_number] == "initial" and incoming_msg=="4"):
+        user_language[user_number] ="hi"
+        response_body = functions.initial_state()
+        response_body = translator.translate("Language Changed\n"+response_body, dest='hi').text
+        msg.body(response_body)
+        user_state[user_number] = "initial"
+        
+        return str(resp)
+
+    elif(user_state[user_number] == "initial" and incoming_msg=="5"):
+        user_language[user_number] ="kn"
+        response_body = functions.initial_state()
+        response_body = translator.translate("Language Changed\n"+response_body, dest='kn').text
+        msg.body(response_body)
+        user_state[user_number] = "initial"
+        return str(resp)
 
 ########################################################################################################
 #state3 - profession inclusion
     elif(user_state[user_number] == "profession_acception"):
         msg.body("")
         response_body,success_code = functions.profession_acception(incoming_msg) 
+        response_body = translator.translate(response_body, dest=user_language[user_number]).text
         msg.body(response_body)
         responded = True
         user_state[user_number] ="initial"
@@ -116,6 +160,7 @@ def bot():
     elif(user_state[user_number] == "search"):
         msg.body("")
         response_body = functions.search_servicetype(servicetype=incoming_msg)
+        response_body = translator.translate(response_body, dest=user_language[user_number]).text
         msg.body(response_body)
         responded = True
         user_state[user_number] = "serviceaddress" #next user state
@@ -158,7 +203,10 @@ def bot():
             link = "\nView more information such as images and more at the attached link http://86feca20bbc7.ngrok.io/preview={} \n".format(previewuuid)
             # msg.url=('http://localhost:8080/?preview={}'.format(previewuuid))
             # msg.url('https://cataas.com/cat')
+
+            response_body = translator.translate(response_body, dest=user_language[user_number]).text
             response_body += link
+            
             msg.body(response_body)
 
         else:
@@ -172,6 +220,7 @@ def bot():
     elif(user_state[user_number] == "sponsor"):
         msg.body("")
         response_body = functions.sponsor_name(name=incoming_msg)
+        response_body = translator.translate(response_body, dest=user_language[user_number]).text
         msg.body(response_body)
         responded = True
         user_state[user_number] = "sponsor_address"
@@ -193,6 +242,7 @@ def bot():
     elif(user_state[user_number] == "sponsor_individualname"):
         msg.body("")
         response_body = functions.sponsor_individualname(individualname=incoming_msg)
+        response_body = translator.translate(response_body, dest=user_language[user_number]).text
         msg.body(response_body)
         responded = True
         user_state[user_number] = "sponsor_individualprofession"
@@ -204,6 +254,7 @@ def bot():
     elif(user_state[user_number] == "sponsor_individualprofession"):
         msg.body("")
         response_body = functions.sponsor_individualprofession(individualprofession=incoming_msg)
+        response_body = translator.translate(response_body, dest=user_language[user_number]).text
         msg.body(response_body)
         responded = True
         user_state[user_number] = "sponsor_individualaddress" #next state
@@ -214,6 +265,7 @@ def bot():
     elif(user_state[user_number] == "sponsor_individualaddress"):
         msg.body("")
         response_body = functions.sponsor_individualaddress(individualaddress=incoming_msg)
+        response_body = translator.translate(response_body, dest=user_language[user_number]).text
         msg.body(response_body)
         responded = True
         user_state[user_number] = "sponsor_individualnumber" #next state
@@ -225,6 +277,7 @@ def bot():
     elif(user_state[user_number] == "sponsor_individualnumber"):
         msg.body("")
         response_body = functions.sponsor_individualnumber(individualnumber=incoming_msg)
+        response_body = translator.translate(response_body, dest=user_language[user_number]).text
         msg.body(response_body)
         responded = True
         user_state[user_number] = "sponsor_individualwages" #next state
@@ -236,6 +289,7 @@ def bot():
     elif(user_state[user_number] == "sponsor_individualwages"):
         msg.body("")
         response_body = functions.sponsor_individualwages(individualwages=incoming_msg)
+        response_body = translator.translate(response_body, dest=user_language[user_number]).text
         msg.body(response_body)
         responded = True
         user_state[user_number] = "sponsor_individualreview" #next state
@@ -247,6 +301,7 @@ def bot():
     elif(user_state[user_number] == "sponsor_individualreview"):
         msg.body("")
         response_body = functions.sponsor_individualreview(individualreview=incoming_msg)
+        response_body = translator.translate(response_body, dest=user_language[user_number]).text
         msg.body(response_body)
         responded = True
         user_state[user_number] = "sponsor_individualpicture" #next state
@@ -276,6 +331,7 @@ def bot():
         requests.post("http://localhost:3000/data",data=data,headers={"content-type": "application/json"})
 
         #finalising the response body
+        response_body = translator.translate(response_body, dest=user_language[user_number]).text
         msg.body(response_body)
         
 
